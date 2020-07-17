@@ -127,7 +127,7 @@ handleDuration = duration => {
   
     handleStop = () => {
       // window.location.reload(false)
-      if (this.state.time != 0) {
+      if (this.state.time !== 0) {
         this.setState({setting: false, time: 0, disabled: true})
         return this.resetTime();
       }

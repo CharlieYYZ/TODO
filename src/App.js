@@ -30,7 +30,7 @@ const TodoList = (props) => {
     render = (props) => {
       return(
         <div> 
-        <h1>Timer</h1>
+        <h1>Pomodoro Timer</h1>
 
         <h2>{String(Math.floor(this.props.time/60)).padStart(2, '0')}:{String(this.props.time%60).padStart(2, '0')}</h2>
         <div><button value={25} onClick={(e) => this.props.onDuration(e.target.value)}>25</button></div>
@@ -38,7 +38,7 @@ const TodoList = (props) => {
         <div><button value={5} onClick={(e) => this.props.onDuration(e.target.value)}>5</button></div>
         <br></br>
         <button disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>Start</button>
-        <button onClick={(e) => this.props.onStop()}>Stop</button>
+        <button onClick={(e) => this.props.onStop()}>Reset</button>
         </div>
       )
     }
@@ -75,10 +75,10 @@ constructor(props){
   super(props);
   this.state = {
     tasks:[],
-    time: 25*60,
-    countdown: 0,
+    initialtime: 3,
+    time: 3,
     disabled: false,
-    setting: false,
+    countingdown: false,
   };
   this.timer = 0;
 }
@@ -89,25 +89,30 @@ componentDidMount() {
 
 
 componentDidUpdate(prevProps, prevState) {
-  console.log(prevState.time)
-  if (prevState.time === 1) {
-    this.setState({setting: false, disabled: true});
+  console.log(prevState)
+  if (prevState.time === 0) {
+    this.setState({countingdown: false, disabled: true});
     return this.resetTime();
   }
 }
 
   
 handleDuration = duration => {
-  this.setState({disabled: false})
-  this.setState({time: duration * 60})
+
+  if (this.state.countingdown === false) {
+    this.setState({disabled: false, time: duration * 60, initialtime: duration * 60})
+  } else { 
+    let currentTime = this.state.time
+    this.setState({time: duration * 60 + currentTime})
+  }
   };
   
   handleStart = () => {
-    if (this.state.setting === false) {
-      this.setState({setting: true})
+    if (this.state.countingdown === false) {
+      this.setState({countingdown: true})
       return this.startTime();  
     } else {
-      this.setState({setting: false})
+      this.setState({countingdown: false})
       return this.resetTime();
     }
     
@@ -115,7 +120,7 @@ handleDuration = duration => {
 
   startTime(){ 
   this.timer = setInterval(() => {
-      this.setState({time:this.state.time - 1})
+      this.setState({time:Math.floor(this.state.time - 1,0)})
     }, 1000);}
 
 
@@ -127,8 +132,9 @@ handleDuration = duration => {
   
     handleStop = () => {
       // window.location.reload(false)
+      let initialtime = this.state.initialtime
       if (this.state.time !== 0) {
-        this.setState({setting: false, time: 0, disabled: true})
+        this.setState({countingdown: false, time: initialtime})
         return this.resetTime();
       }
       

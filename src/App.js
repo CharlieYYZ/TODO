@@ -75,7 +75,7 @@ constructor(props){
   super(props);
   this.state = {
     tasks:[],
-    time: 10,
+    time: 25*60,
     countdown: 0,
     disabled: false,
     setting: false,
@@ -90,8 +90,8 @@ componentDidMount() {
 
 componentDidUpdate(prevProps, prevState) {
   console.log(prevState.time)
-  if (prevState.time === 1 || prevState.time === 0) {
-    this.setState({setting: false});
+  if (prevState.time === 1) {
+    this.setState({setting: false, disabled: true});
     return this.resetTime();
   }
 }
@@ -124,27 +124,15 @@ handleDuration = duration => {
     clearInterval(this.timer)
     console.log(startTime)
   }
-
-  // handleStart = () => {
-  //     this.setState({disabled: true})
-  //     let resetTime = this.state.time
-      
-  //     let interval = setInterval(() => {
-  //       this.setState({time:this.state.time -1 });
-  //     }, 1000);
-    
-  //     setTimeout(() => {
-  //       clearInterval(interval); alert('Time is up!');this.setState({time:resetTime, disabled: false})
-  //     }, this.state.time * 1000);
-  //     }
   
     handleStop = () => {
       // window.location.reload(false)
-      this.setState({setting: false, time: 0, disabled: true})
-      return this.resetTime();
-    }    
-
-
+      if (this.state.time != 0) {
+        this.setState({setting: false, time: 0, disabled: true})
+        return this.resetTime();
+      }
+      
+    }
  
   handleDelete = (index) => {
     const newArr = this.state.tasks;

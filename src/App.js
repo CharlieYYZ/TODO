@@ -30,7 +30,7 @@ const TodoList = (props) => {
       </ListItem>
     </div>);
     return (
-      <div class="taskList">
+      <div className="taskList">
       <ul>{todos}</ul>
       </div>
     )
@@ -52,7 +52,7 @@ const TodoList = (props) => {
           <li><Button size= "small" variant="contained" value={5} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>5</Button></li>
         </ul>
         <br/>
-        <div class="container">
+        <div className="container">
         <ul id="control">
           <li><Button size= "small" variant="contained" disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>Start</Button></li>
           <li><Button size= "small" variant="contained" onClick={(e) => this.props.onStop()}>Reset</Button></li>
@@ -74,7 +74,7 @@ const TodoList = (props) => {
 
     render() {
       return(
-        <div class="container">
+        <div className="container">
         <form onSubmit={this.handleSubmit}>
           <TextField 
             id="outlined"
@@ -97,8 +97,8 @@ constructor(props){
   super(props);
   this.state = {
     tasks:[],
-    initialtime: 3,
-    time: 3,
+    initialtime: 60 * 25,
+    time: 60 * 25,
     disabled: false,
     countingdown: false,
   };

@@ -24,3 +24,27 @@ form {
     max-height: 200px;
     overflow-y: auto;
   }
+
+ul {
+    list-style-type: none;
+    display: inline;
+   }
+
+#duration li {
+    float: left;
+    padding: 5px;
+    
+   }
+
+  #control li {
+    padding: 5px;
+    float: left;
+   }
+
+  .container {
+    clear:left;
+  }
+
+  .taskList {
+    max-width: 250px;
+  }

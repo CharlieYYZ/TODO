@@ -1,5 +1,13 @@
 import React from "react";
 import "./styles.css";
+import 'fontsource-roboto';
+import { Button } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const Header = (props) => {
   return(
@@ -10,16 +18,21 @@ const Header = (props) => {
 }
 
 const TodoList = (props) => {
-  // console.log(props)
   const todos = props.tasks.map((todos, index) => 
     <div key={index} id={index} >
-      <li contenteditable="true">{todos}</li>
-      <button onClick={(e) => {props.onDelete(index)}}>
-        delete
-      </button>
+      <ListItem key={index} role={undefined} dense button>
+      <ListItemText id={index} primary={todos}/>
+      <ListItemSecondaryAction>
+      <IconButton edge="end">
+      <HighlightOffIcon color="primary" fontSize="small" onClick={(e) => {props.onDelete(index)}}/>
+      </IconButton>
+      </ListItemSecondaryAction>
+      </ListItem>
     </div>);
     return (
+      <div class="taskList">
       <ul>{todos}</ul>
+      </div>
     )
   };
 
@@ -33,12 +46,18 @@ const TodoList = (props) => {
         <h1>Pomodoro Timer</h1>
 
         <h2>{String(Math.floor(this.props.time/60)).padStart(2, '0')}:{String(this.props.time%60).padStart(2, '0')}</h2>
-        <div><button value={25} onClick={(e) => this.props.onDuration(e.target.value)}>25</button></div>
-        <div><button value={15} onClick={(e) => this.props.onDuration(e.target.value)}>15</button></div>
-        <div><button value={5} onClick={(e) => this.props.onDuration(e.target.value)}>5</button></div>
-        <br></br>
-        <button disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>Start</button>
-        <button onClick={(e) => this.props.onStop()}>Reset</button>
+        <ul id="duration">
+          <li><Button size= "small" variant="contained" value={25} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>25</Button></li>
+          <li><Button size= "small" variant="contained" value={15} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>15</Button></li>
+          <li><Button size= "small" variant="contained" value={5} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>5</Button></li>
+        </ul>
+        <br/>
+        <div class="container">
+        <ul id="control">
+          <li><Button size= "small" variant="contained" disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>Start</Button></li>
+          <li><Button size= "small" variant="contained" onClick={(e) => this.props.onStop()}>Reset</Button></li>
+        </ul>
+        </div>
         </div>
       )
     }
@@ -55,16 +74,19 @@ const TodoList = (props) => {
 
     render() {
       return(
+        <div class="container">
         <form onSubmit={this.handleSubmit}>
-          <input 
+          <TextField 
+            id="outlined"
+            label="Add a Task"
             type='text'
             className='input'
-            placeholder='Enter Item'
             value={this.state.term}
             onChange={(e) => this.setState({term: e.target.value})}
           />
-          <input type="submit" value="Submit"></input>
+          {/* <Button type="submit" value="Submit"></Button> */}
         </form>
+        </div>
       );
     }
   }
@@ -89,10 +111,9 @@ componentDidMount() {
 
 
 componentDidUpdate(prevProps, prevState) {
-  console.log(prevState)
-  if (prevState.time === 0) {
-    this.setState({countingdown: false, disabled: true});
-    return this.resetTime();
+  if (prevState.time === 0 && prevState.countingdown === true) {
+    this.setState({countingdown: false});
+    this.resetTime();
   }
 }
 
@@ -108,6 +129,7 @@ handleDuration = duration => {
   };
   
   handleStart = () => {
+
     if (this.state.countingdown === false) {
       this.setState({countingdown: true})
       return this.startTime();  
@@ -120,14 +142,13 @@ handleDuration = duration => {
 
   startTime(){ 
   this.timer = setInterval(() => {
-      this.setState({time:Math.floor(this.state.time - 1,0)})
+      this.setState({time:Math.max(this.state.time - 1,0)})
     }, 1000);}
 
 
   resetTime() {
     const startTime = this.timer
     clearInterval(this.timer)
-    console.log(startTime)
   }
   
     handleStop = () => {
@@ -136,13 +157,14 @@ handleDuration = duration => {
       if (this.state.time !== 0) {
         this.setState({countingdown: false, time: initialtime})
         return this.resetTime();
+      } else {
+        this.setState({time: initialtime})
       }
       
     }
  
   handleDelete = (index) => {
     const newArr = this.state.tasks;
-    console.log(index);
     newArr.splice(index, 1);
     this.setState({tasks: newArr});
   };

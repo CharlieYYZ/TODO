@@ -146,7 +146,7 @@ handleDuration = duration => {
 
   resetTime() {
     const startTime = this.timer
-    clearInterval(this.timer)
+    clearInterval(startTime)
   }
   
     handleStop = () => {

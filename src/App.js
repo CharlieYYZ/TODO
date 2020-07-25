@@ -44,7 +44,6 @@ const TodoList = (props) => {
       return(
         <div> 
         <h1>Pomodoro Timer</h1>
-
         <h2>{String(Math.floor(this.props.time/60)).padStart(2, '0')}:{String(this.props.time%60).padStart(2, '0')}</h2>
         <ul id="duration">
           <li><Button size= "small" variant="contained" value={25} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>25</Button></li>
@@ -84,7 +83,6 @@ const TodoList = (props) => {
             value={this.state.term}
             onChange={(e) => this.setState({term: e.target.value})}
           />
-          {/* <Button type="submit" value="Submit"></Button> */}
         </form>
         </div>
       );

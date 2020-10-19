@@ -1,25 +1,35 @@
 import React from "react";
 import "./styles.css";
 import 'fontsource-roboto';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Slider from '@material-ui/core/Slider';
+import Grid from '@material-ui/core/Grid';
+import VolumeDown from '@material-ui/icons/VolumeDown';
+import VolumeUp from '@material-ui/icons/VolumeUp';
+import Container from '@material-ui/core/Container';
+
 
 const Header = (props) => {
   return(
+    <Container maxWidth="sm"> 
     <h1>
         You have {props.numTodos} Todos
     </h1>
+    </Container>
   )
 }
 
 const TodoList = (props) => {
   const todos = props.tasks.map((todos, index) => 
+  
     <div key={index} id={index} >
+      
       <ListItem key={index} role={undefined} dense button>
       <ListItemText id={index} primary={todos}/>
       <ListItemSecondaryAction>
@@ -30,9 +40,11 @@ const TodoList = (props) => {
       </ListItem>
     </div>);
     return (
+      <Container maxWidth="sm">
       <div className="taskList">
       <ul>{todos}</ul>
       </div>
+    </Container>
     )
   };
 
@@ -43,20 +55,42 @@ const TodoList = (props) => {
     render = (props) => {
       return(
         <div> 
+          <Container maxWidth="sm">
         <h1>Pomodoro Timer</h1>
+        
         <h2>{String(Math.floor(this.props.time/60)).padStart(2, '0')}:{String(this.props.time%60).padStart(2, '0')}</h2>
+        <div>
+        {/* <audio controls loop="true" src="http://bruitages.free.fr/horloges/tic_tac_reveil.wav">
+          Your browser does not support the
+          <code>audio</code> element.
+        </audio> */}
+        {/* <Grid container spacing={2}>
+          <Grid item>
+            <VolumeDown />
+          </Grid>
+          <Grid item xs={3}>
+            <Slider aria-labelledby="continuous-slider" />
+          </Grid>
+          <Grid item>
+            <VolumeUp />
+          </Grid>
+        </Grid> */}
+        </div>
+
         <ul id="duration">
-          <li><Button size= "small" variant="contained" value={25} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>25</Button></li>
-          <li><Button size= "small" variant="contained" value={15} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>15</Button></li>
-          <li><Button size= "small" variant="contained" value={5} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>5</Button></li>
+          <li><Button size= "small" variant="contained" value={25} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>{this.props.btnState? '+ 25 min' : '25 min'}</Button></li>
+          <li><Button size= "small" variant="contained" value={15} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>{this.props.btnState? '+ 15 min' : '15 min'}</Button></li>
+          <li><Button size= "small" variant="contained" value={5} onClick={(e) => this.props.onDuration(e.currentTarget.value)}>{this.props.btnState? '+ 5 min' : '5 min'}</Button></li>
         </ul>
         <br/>
         <div className="container">
         <ul id="control">
-          <li><Button size= "small" variant="contained" disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>Start</Button></li>
+          <li><Button size= "small" variant="contained" disabled={this.props.disabled} onClick={(e) => {this.props.onStart()}}>{this.props.btnState? 'Pause' : 'Start'}</Button></li>
           <li><Button size= "small" variant="contained" onClick={(e) => this.props.onStop()}>Reset</Button></li>
         </ul>
         </div>
+    
+        </Container>
         </div>
       )
     }
@@ -73,7 +107,9 @@ const TodoList = (props) => {
 
     render() {
       return(
+        
         <div className="container">
+        <Container maxWidth="sm">
         <form onSubmit={this.handleSubmit}>
           <TextField 
             id="outlined"
@@ -84,7 +120,9 @@ const TodoList = (props) => {
             onChange={(e) => this.setState({term: e.target.value})}
           />
         </form>
+        </Container>
         </div>
+        
       );
     }
   }
@@ -92,7 +130,7 @@ const TodoList = (props) => {
 class App extends React.Component {
 
 constructor(props){
-  super(props);
+  super();
   this.state = {
     tasks:[],
     initialtime: 60 * 25,
@@ -178,7 +216,7 @@ handleDuration = duration => {
        <div>
          <Header numTodos={this.state.tasks.length}/>
          <TaskTimer disabled={this.state.disabled} time={this.state.time} onDuration={this.handleDuration} 
-         onStart={this.handleStart} onStop={this.handleStop}/>
+         onStart={this.handleStart} onStop={this.handleStop} btnState={this.state.countingdown}/>
          <TodoList tasks={this.state.tasks} onDelete={this.handleDelete}/>
          <SubmitForm onFormSubmit={this.handleSubmit}/>
       </div>
